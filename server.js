@@ -32,15 +32,25 @@ server.listen(PORT, err => {
 const port = 3011;
 var servers = require('http').createServer(app);
 var io = require('socket.io')(servers);
+const UserList = require('./src/server/userlist.js');
+var users = new UserList();
 
 io.on('connection', socket => {
-  console.log('User connected', socket.id, socket.handshake.address);
-  
-  socket.on('disconnect', reason => {
-    console.log('user disconnected');
-  });
+    users.addUser(socket.id);
+    console.log(users);
+    socket.join("abc");
+    socket.emit('my_id', { id: socket.id });
+    socket.broadcast.to('abc').emit('player_join', { id: socket.id });
 
-  
+    socket.on('disconnect', reason => {
+        socket.leaveAll();
+        socket.broadcast.to('abc').emit('player_left', { id: socket.id });
+        users.removeUser(socket.id);
+    });
+
+    socket.on('player_data', data => {
+        socket.broadcast.to('abc').emit('other_update', data);
+    })
 });
 
 servers.listen(port, () => { console.log("Socket server start on port:", port)});

@@ -27,13 +27,10 @@ export default class JetsFightGame extends Component {
       }
     }
     this.canvas = React.createRef();
-    this.fighters = [];
-    this.projectiles = [];
-
-    this.lastTime = performance.now();
-    this.fpsInterval = 45;
-    this.rendered = true;
+    this.player = null;
+    this.others = [];
   }
+
   handleKeys(value, e){
     let keys = this.state.keys;
     if(e.keyCode === KEY.UP  )  keys.up     = value;
@@ -44,13 +41,49 @@ export default class JetsFightGame extends Component {
     });
   }
 
+  otherUpdate(data) {
+    let found = false;
+    this.others.forEach(jet => {
+      if (jet.getID() === data.id) {
+        jet.setPosition(data.position);
+        jet.setAngle(data.angle);
+        jet.updateProjectiles(data.projs);
+        found = true;
+      }
+    });
+    if (!found) {
+      this.joinOther(data);
+    }
+  }
+
+  joinOther(data) {
+    this.others.push(new Fighter({
+      id: data.id,
+      position: {
+        x: this.state.screen.width/2,
+        y: this.state.screen.height/2
+      },
+      create: this.registerObject,
+      onDestroy: this.unregisterObject,
+      canControl: false
+    }));
+  }
+
+  deleteOther(data) {
+    this.others = this.others.filter(jet => jet.getID() !== data.id);
+  }
+
   componentDidMount() {
+    socket.on('my_id', data => this.startGame(data.id));
+    socket.on('other_update', data => this.otherUpdate(data));
+    socket.on('player_join', data => this.joinOther(data));
+    socket.on('player_left', data => this.deleteOther(data));
+
     window.addEventListener('keyup',   this.handleKeys.bind(this, false));
     window.addEventListener('keydown', this.handleKeys.bind(this, true));
 
     const context = this.canvas.current.getContext('2d');
     this.setState({ context: context });
-    this.startGame();
     requestAnimationFrame(() => {this.update()});
   }
 
@@ -60,11 +93,6 @@ export default class JetsFightGame extends Component {
   }
 
   update(time) {
-
-    if (!this.rendered) {
-      console.log("not rendered");
-    }
-    this.rendered = false;
     const context = this.state.context;
     context.clearRect(0, 0, this.state.screen.width, this.state.screen.height);
 
@@ -78,44 +106,33 @@ export default class JetsFightGame extends Component {
     context.globalAlpha = 1;
 
     // Render
-    this.projectiles.forEach(projectile =>
-      projectile.render(this.state)
-      );
-    this.fighters.forEach(jet => {
-      jet.render(this.state);
+    if (this.player !== null) {
+      this.player.render(this.state);
+      socket.emit('player_data', this.player.data());
+    }
+    Object.entries(this.others).forEach(([key, value]) => {
+      value.render(this.state);
     });
 
     context.restore();
-
-    this.rendered = true;
     // Next frame
     requestAnimationFrame((time) => {this.update(time)});
   }
 
-  startGame() {
+  startGame(id) {
     this.setState({
       inGame: true
     });
 
     // Make fighter
-    new Fighter({
+    this.player = new Fighter({
+      id: id,
       position: {
         x: this.state.screen.width/2,
         y: this.state.screen.height/2
       },
-      create: this.registerObject,
-      onDestroy: this.unregisterObject
+      canControl: true
     });
-  }
-
-  registerObject = (object, group) => {
-    this[group].push(object);
-  }
-
-  unregisterObject = (object, group) => {
-    if (this[group].includes(object)) {
-      this[group].splice(this[group].indexOf(object), 1);
-    }
   }
 
   render() {

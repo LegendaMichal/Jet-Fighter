@@ -19,31 +19,34 @@ class Projectile {
         this.image = new Image();
         this.image.src = img;
 
-        args.create(this, 'projectiles');
-        this.onDestroy = args.onDestroy;
+        this.isOwner = args.isOwner;
     }
 
-    checkLifeSpan() {
-        if (this.trajectoryLength > this.lifeSpanLength) {
-            this.onDestroy(this, 'projectiles');
-        }
+    isExpired() {
+        return this.trajectoryLength > this.lifeSpanLength;
     }
 
     render(state) {
-        this.checkLifeSpan();
-
-        // move
-        this.trajectoryLength += Math.sqrt(Math.pow(this.velocity.x, 2) + Math.pow(this.velocity.y, 2));
-        this.position.x += this.velocity.x;
-        this.position.y += this.velocity.y;
+        if (this.isOwner) {
+            // move
+            this.trajectoryLength += Math.sqrt(Math.pow(this.velocity.x, 2) + Math.pow(this.velocity.y, 2));
+            this.position.x += this.velocity.x;
+            this.position.y += this.velocity.y;
+        }
 
         // Draw
         const context = state.context;
         context.save();
         context.translate(this.position.x, this.position.y);
-        context.rotate(this.angle * Math.PI / 180);
         context.drawImage(this.image, 0,0, this.size.width, this.size.height);
         context.restore();
+    }
+
+    shortData() {
+        return {
+            position: this.position,
+            angle: this.angle
+        }
     }
 }
 
