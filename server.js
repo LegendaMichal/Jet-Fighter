@@ -5,10 +5,12 @@ const morgan = require('morgan');
 const path = require('path');
 
 const app = express();
+const server = createServer(app);
+var io = require('socket.io')(server);
 
 // Express server
 const normalizePort = port => parseInt(port, 10);
-const PORT = normalizePort(process.env.PORT || 5000);
+const PORT = normalizePort(process.env.PORT || 80);
 
 app.disable('x-powered-by');
 app.use(compression());
@@ -20,24 +22,15 @@ app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
 });
 
-const server = createServer(app);
 
-server.listen(PORT, err => {
-    if (err) throw err;
-
-    console.log("Server started on port", PORT);
-});
 
 // Web Socket server
-const port = 3011;
-var servers = require('http').createServer(app);
-var io = require('socket.io')(servers);
-const UserList = require('./src/server/userlist.js');
-var users = new UserList();
+// const UserList = require('./src/server/userlist.js');
+// var users = new UserList();
 
 io.on('connection', socket => {
-    users.addUser(socket.id);
-    console.log(users);
+    // users.addUser(socket.id);
+    // console.log(users);
     socket.join("abc");
     socket.emit('my_id', { id: socket.id });
     socket.broadcast.to('abc').emit('player_join', { id: socket.id });
@@ -45,7 +38,7 @@ io.on('connection', socket => {
     socket.on('disconnect', reason => {
         socket.leaveAll();
         socket.broadcast.to('abc').emit('player_left', { id: socket.id });
-        users.removeUser(socket.id);
+        // users.removeUser(socket.id);
     });
 
     socket.on('player_data', data => {
@@ -53,4 +46,9 @@ io.on('connection', socket => {
     })
 });
 
-servers.listen(port, () => { console.log("Socket server start on port:", port)});
+
+server.listen(PORT, err => {
+    if (err) throw err;
+
+    console.log("Server started on port", PORT);
+});

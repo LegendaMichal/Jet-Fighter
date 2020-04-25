@@ -8,7 +8,7 @@ const KEY = {
 };
 
 const io = require('socket.io-client');
-const socket = io('http://localhost:3011');
+const socket = io();
 
 export default class JetsFightGame extends Component {
   constructor() {
