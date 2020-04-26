@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Fighter from './fighter'
+import io from 'socket.io-client'
 
 const KEY = {
   DOWN: 40,
@@ -7,7 +8,6 @@ const KEY = {
   SPACE: 32
 };
 
-const io = require('socket.io-client');
 const socket = io();
 
 export default class JetsFightGame extends Component {
@@ -94,10 +94,10 @@ export default class JetsFightGame extends Component {
 
   update(time) {
     const context = this.state.context;
-    context.clearRect(0, 0, this.state.screen.width, this.state.screen.height);
 
     context.save();
     context.scale(this.state.screen.ratio, this.state.screen.ratio);
+    context.clearRect(0, 0, this.state.screen.width, this.state.screen.height);
 
     // Motion trail
     context.fillStyle = '#25c5df';
