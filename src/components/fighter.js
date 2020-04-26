@@ -143,7 +143,7 @@ class Fighter {
       context.save();
       context.translate(this.position.x, this.position.y);
       context.rotate(this.rotation * Math.PI / 180);
-      context.strokeRect(0, 0, this.size.width, this.size.height);
+      context.drawImage(this.image, 0,0, this.size.width, this.size.height);
       context.restore();
 
       this.projectiles.forEach(proj => proj.render(state));
