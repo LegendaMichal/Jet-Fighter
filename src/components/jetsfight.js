@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Fighter from './fighter'
-import io from 'socket.io-client'
 
 const KEY = {
   DOWN: 40,
@@ -8,10 +7,8 @@ const KEY = {
   SPACE: 32
 };
 
-const socket = io();
-
 export default class JetsFightGame extends Component {
-  constructor() {
+  constructor(args) {
     super();
     this.state = {
       screen: {
@@ -29,6 +26,9 @@ export default class JetsFightGame extends Component {
     this.canvas = React.createRef();
     this.player = null;
     this.others = [];
+
+    this.socket = args.socket;
+    this.sessionId = args.sessionId;
   }
 
   handleKeys(value, e){
@@ -74,10 +74,11 @@ export default class JetsFightGame extends Component {
   }
 
   componentDidMount() {
-    socket.on('my_id', data => this.startGame(data.id));
-    socket.on('other_update', data => this.otherUpdate(data));
-    socket.on('player_join', data => this.joinOther(data));
-    socket.on('player_left', data => this.deleteOther(data));
+    this.socket.emit('ready', this.sessionId);
+    this.socket.on('my_id', data => this.startGame(data.id));
+    this.socket.on('other_update', data => this.otherUpdate(data));
+    this.socket.on('player_join', data => this.joinOther(data));
+    this.socket.on('player_left', data => this.deleteOther(data));
 
     window.addEventListener('keyup',   this.handleKeys.bind(this, false));
     window.addEventListener('keydown', this.handleKeys.bind(this, true));
@@ -108,7 +109,7 @@ export default class JetsFightGame extends Component {
     // Render
     if (this.player !== null) {
       this.player.render(this.state);
-      socket.emit('player_data', this.player.data());
+      this.socket.emit('player_data', this.player.data());
     }
     Object.entries(this.others).forEach(([key, value]) => {
       value.render(this.state);
@@ -137,11 +138,16 @@ export default class JetsFightGame extends Component {
 
   render() {
     return (
-      <div>
-        <canvas ref={this.canvas}
-          width={this.state.screen.width * this.state.screen.ratio}
-          height={this.state.screen.height * this.state.screen.ratio}
-        />
+      
+      <div className='container-fluid'>
+        <div className='row justify-content-center'>
+          <div className='col-8 offset-lg-0'>
+            <canvas ref={this.canvas}
+              width={this.state.screen.width * this.state.screen.ratio}
+              height={this.state.screen.height * this.state.screen.ratio}
+            />
+          </div>
+        </div>
       </div>
     );
   }

@@ -10,4 +10,13 @@ const degToRad = (angle) => {
     return angle * Math.PI/180;
 }
 
-export { maxOfAbs, radToDeg, degToRad };
+function padding(a, b, c, d) {
+    return {
+      paddingTop: a,
+      paddingRight: b ? b : a,
+      paddingBottom: c ? c : a,
+      paddingLeft: d ? d : (b ? b : a)
+    }
+  }
+
+export { maxOfAbs, radToDeg, degToRad, padding };
