@@ -1,5 +1,6 @@
 import AEG from './../Images/Planes/AEG/AEG_CIV_default.png'
-import Projectile from './projectile';
+import Projectile from './projectile'
+import { degToRad } from './../helper.js'
 
 class Fighter {
     constructor(args) {
@@ -19,9 +20,10 @@ class Fighter {
         height: 64
       }
       this.origin = () => {
+        const radRot = degToRad(this.rotation);
         return {
-          x: Math.cos(this.rotation*Math.PI/180) * (this.size.width * 2 / 3),
-          y: Math.sin(this.rotation*Math.PI/180) * (this.size.height / 2)
+          x: Math.cos(radRot) * (this.size.width * 2 / 3),
+          y: Math.sin(radRot) * (this.size.height / 2)
         }
       }
       this.lastTimeFired = performance.now();
@@ -72,6 +74,17 @@ class Fighter {
         });
       }
     }
+
+    gunPosition() {
+      const sizeX = this.size.width * 0.88;
+      const sizeY = this.size.height * 0.39;
+      const gunDistance = Math.sqrt(Math.pow(sizeX, 2) + Math.pow(sizeY, 2));
+      const gunAngle = degToRad(this.rotation) + Math.atan(sizeY / sizeX);
+      return {
+        x: this.position.x + Math.cos(gunAngle) * gunDistance,
+        y: this.position.y + Math.sin(gunAngle) * gunDistance,
+      };
+    }
     
     shoot() {
       const actualTime = performance.now();
@@ -79,10 +92,7 @@ class Fighter {
         return;
       }
       this.lastTimeFired = actualTime;
-      const projPos = {
-        x: this.position.x + Math.cos(this.rotation*Math.PI/180) * this.size.width,
-        y: this.position.y + Math.sin(this.rotation*Math.PI/180) * this.size.height,
-      };
+      const projPos = this.gunPosition();
       this.projectilesFired++;
       this.projectiles.push(new Projectile({
         isOwner: this.canControl,
@@ -134,7 +144,6 @@ class Fighter {
       context.translate(this.position.x, this.position.y);
       context.rotate(this.rotation * Math.PI / 180);
       context.strokeRect(0, 0, this.size.width, this.size.height);
-      context.drawImage(this.image, 0,0, this.size.width, this.size.height);
       context.restore();
 
       this.projectiles.forEach(proj => proj.render(state));

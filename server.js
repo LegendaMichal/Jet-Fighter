@@ -22,15 +22,8 @@ app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
 });
 
-
-
 // Web Socket server
-// const UserList = require('./src/server/userlist.js');
-// var users = new UserList();
-
 io.on('connection', socket => {
-    // users.addUser(socket.id);
-    // console.log(users);
     socket.join("abc");
     socket.emit('my_id', { id: socket.id });
     socket.broadcast.to('abc').emit('player_join', { id: socket.id });
@@ -38,7 +31,6 @@ io.on('connection', socket => {
     socket.on('disconnect', reason => {
         socket.leaveAll();
         socket.broadcast.to('abc').emit('player_left', { id: socket.id });
-        // users.removeUser(socket.id);
     });
 
     socket.on('player_data', data => {

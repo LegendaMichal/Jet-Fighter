@@ -1,5 +1,5 @@
 import img from './../Images/Planes/AEG/projectile/Bullet_3.png'
-import maxOfAbs from './../helper'
+import { maxOfAbs } from './../helper'
 
 class Projectile {
     constructor(args) {
@@ -27,12 +27,6 @@ class Projectile {
     }
 
     render(state) {
-        if (this.isOwner) {
-            // move
-            this.trajectoryLength += Math.sqrt(Math.pow(this.velocity.x, 2) + Math.pow(this.velocity.y, 2));
-            this.position.x += this.velocity.x;
-            this.position.y += this.velocity.y;
-        }
 
         // Draw
         const context = state.context;
@@ -40,6 +34,14 @@ class Projectile {
         context.translate(this.position.x, this.position.y);
         context.drawImage(this.image, 0,0, this.size.width, this.size.height);
         context.restore();
+
+
+        if (this.isOwner) {
+            // move
+            this.trajectoryLength += Math.sqrt(Math.pow(this.velocity.x, 2) + Math.pow(this.velocity.y, 2));
+            this.position.x += this.velocity.x;
+            this.position.y += this.velocity.y;
+        }
     }
 
     shortData() {
