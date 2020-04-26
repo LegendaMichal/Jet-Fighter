@@ -10,9 +10,10 @@ class Projectile {
             x: Math.cos(this.angle*Math.PI/180) * this.speed,
             y: Math.sin(this.angle*Math.PI/180) * this.speed
         }
+        this.defaultSize = 8;
         this.size = {
-            width: maxOfAbs(Math.cos(this.angle*Math.PI/180) * 20.5, Math.sin(this.angle*Math.PI/180) * 20.5),
-            height: maxOfAbs(Math.cos(this.angle*Math.PI/180) * 3, Math.sin(this.angle*Math.PI/180) * 3)
+            width: Math.cos(this.angle*Math.PI/180) * this.defaultSize,
+            height: Math.sin(this.angle*Math.PI/180) * this.defaultSize
         }
         this.trajectoryLength = 0;
         this.lifeSpanLength = args.maxShootLength;
@@ -31,8 +32,12 @@ class Projectile {
         // Draw
         const context = state.context;
         context.save();
-        context.translate(this.position.x, this.position.y);
-        context.drawImage(this.image, 0,0, this.size.width, this.size.height);
+        context.lineWidth = 1;
+        context.strokeStyle = '#d80c00';
+        context.beginPath();
+        context.moveTo(this.position.x, this.position.y);
+        context.lineTo(this.position.x + this.size.width, this.position.y + this.size.height);
+        context.stroke();
         context.restore();
 
 
