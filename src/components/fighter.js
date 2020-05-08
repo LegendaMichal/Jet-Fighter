@@ -5,6 +5,7 @@ import { degToRad } from './../helper.js'
 class Fighter {
     constructor(args) {
       this.id = args.id;
+      this.canControl = args.canControl;
       this.position = args.position;
       this.velocity = {
           x: 0,
@@ -28,9 +29,6 @@ class Fighter {
       }
       this.lastTimeFired = performance.now();
       this.fireTimePeriod = 80; // in ms
-      this.onCreate = args.create;
-      this.onDestroy = args.onDestroy;
-      this.canControl = args.canControl;
       this.projectilesFired = 0;
       this.projectiles = [];
     }

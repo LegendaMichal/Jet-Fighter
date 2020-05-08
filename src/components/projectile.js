@@ -4,8 +4,11 @@ import { maxOfAbs } from './../helper'
 class Projectile {
     constructor(args) {
         this.position = args.position;
-        this.speed = 15;
         this.angle = args.angle;
+        this.lifeSpanLength = args.maxShootLength;
+        this.isOwner = args.isOwner;
+        
+        this.speed = 15;
         this.velocity = {
             x: Math.cos(this.angle*Math.PI/180) * this.speed,
             y: Math.sin(this.angle*Math.PI/180) * this.speed
@@ -16,11 +19,8 @@ class Projectile {
             height: Math.sin(this.angle*Math.PI/180) * this.defaultSize
         }
         this.trajectoryLength = 0;
-        this.lifeSpanLength = args.maxShootLength;
         this.image = new Image();
         this.image.src = img;
-
-        this.isOwner = args.isOwner;
     }
 
     isExpired() {

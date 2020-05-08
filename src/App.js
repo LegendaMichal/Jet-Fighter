@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Game from './components/jetsfight';
 import io from 'socket.io-client';
+import MainWindowManager from './components/mainmenu/mainwindowmanager'
 
 import LobbyMenu from './components/lobby/lobbymenu'
 
@@ -13,9 +14,10 @@ function App() {
     setSessionId(id);
   });
   return (
-    <div className="Game">
-      { sessionId ? <Game socket={socket} sesionId={sessionId}/> : <LobbyMenu socket={socket}/> }
-    </div>
+    <MainWindowManager />
+    // <div className="Game">
+    //   { sessionId ? <Game socket={socket} sesionId={sessionId}/> : <LobbyMenu socket={socket}/> }
+    // </div>
   );
 }
 

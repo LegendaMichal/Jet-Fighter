@@ -1,0 +1,138 @@
+.menu-btns {
+    margin-top: 150px;
+
+    .row {
+        margin: 10px 15px 0 15px;
+    }
+
+    #profileBtn {
+        display: inline-block;
+        position: relative;
+        color: #1a4464;
+        width: 100px;
+        background: none;
+        border: 0;
+        text-align: center;
+        white-space: nowrap;
+        text-transform: capitalize;
+        margin: 0;
+        padding: 0;
+
+        &:hover {
+            color: #4b89b8;
+        }
+    }
+
+    #rankedGameBtn {
+        display: inline-block;
+        position: relative;
+        height: 50px;
+        width: auto;
+        color: #1a4464;
+        background: none;
+        border: 0;
+        line-height: 25px;
+        text-align: center;
+        white-space: nowrap;
+        text-transform: capitalize;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+
+        &:after,
+        &:before {
+            position: absolute;
+            content: '';
+            bottom: -3px;
+            height: 110%;
+            width: 80%;
+            z-index: -1;
+        }
+
+        &:before {
+            left: -1px;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            border-top: 2px solid #1a4464;
+            border-left: 2px solid #1a4464;
+            border-bottom: 2px solid #1a4464;
+            transform-origin: left top;
+            transform: skew(-15deg);
+        }
+
+        &:after {
+            right: 0px;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            border-top: 2px solid #1a4464;
+            border-right: 2px solid #1a4464;
+            border-bottom: 2px solid #1a4464;
+            transform-origin: right top;
+            transform: skew(15deg);
+        }
+
+        &:hover,
+        &:hover:after,
+        &:hover:before {
+            background: #4b89b8;
+            border-color: #4b89b8;
+            color: white;
+        }
+    }
+    
+    #customGameBtn {
+        display: inline-block;
+        position: relative;
+        height: 25px;
+        width: 111px;
+        color: #1a4464;
+        background: none;
+        border: 0;
+        line-height: 5px;
+        text-align: center;
+        white-space: nowrap;
+        text-transform: capitalize;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        margin-left: -5px;
+
+        &:after,
+        &:before {
+            position: absolute;
+            content: '';
+            top: -2px;
+            height: 110%;
+            width: 70%;
+            z-index: -1;
+        }
+
+        &:before {
+            left: -1px;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 8px;
+            border-top: 2px solid #1a4464;
+            border-left: 2px solid #1a4464;
+            border-bottom: 2px solid #1a4464;
+            transform-origin: left bottom;
+            transform: skew(15deg);
+        }
+
+        &:after {
+            right: 0px;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 8px;
+            border-top: 2px solid #1a4464;
+            border-right: 2px solid #1a4464;
+            border-bottom: 2px solid #1a4464;
+            transform-origin: right bottom;
+            transform: skew(-15deg);
+        }
+
+        &:hover,
+        &:hover:after,
+        &:hover:before {
+            background: #4b89b8;
+            border-color: #4b89b8;
+            color: white;
+        }
+    }
+}

@@ -63,8 +63,6 @@ export default class JetsFightGame extends Component {
         x: this.state.screen.width/2,
         y: this.state.screen.height/2
       },
-      create: this.registerObject,
-      onDestroy: this.unregisterObject,
       canControl: false
     }));
   }
