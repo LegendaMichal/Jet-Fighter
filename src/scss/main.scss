@@ -312,3 +312,34 @@
     width: 100%;
     margin: 60px;
 }
+.lobby {
+    .context-row {
+        margin-top: 30px;
+        margin-bottom: 40px;
+
+        table {
+            margin-bottom: 10em;
+        }
+    }
+
+    button {
+        display: block;
+        position: relative;
+        color: #1a4464;
+        background: none;
+        border: 0;
+        text-align: center;
+        white-space: nowrap;
+        text-transform: capitalize;
+        margin: 0;
+        border-radius: 0.4em;
+        border: 1px solid #1a4464;
+    
+        &:hover {
+            background: #4b89b8;
+            border-color: #4b89b8;
+            color: white;
+        }
+    }
+}
+

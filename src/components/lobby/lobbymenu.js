@@ -84,7 +84,7 @@ class LobbyMenu extends React.Component {
     render() {
         return (   
             <div className='container-fluid lobbyContainer'>
-                <div className='row justify-content-center'>
+                <div className='row justify-content-center lobby'>
                     <div className='col'>
                         { this.state.lobbyPosition === 'container'
                         ? <LobbyContainer

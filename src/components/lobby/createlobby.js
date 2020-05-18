@@ -17,7 +17,7 @@ function LobbyCreator(props) {
                 </div>
             </div>
             <form className="form-group" onSubmit={onCreate}>
-                <div className="row">
+                <div className="row context-row">
                     <div className="col">
                         <div className="row">
                             <div className="col-3">
@@ -37,7 +37,11 @@ function LobbyCreator(props) {
                         </div>
                     </div>
                 </div>
-                <input className="btn btn-primary" type="submit" value="Create"/>
+                <div className="row">
+                    <div className="col">
+                        <button className="btn btn-primary" type="submit">Create</button>
+                    </div>
+                </div>
             </form>
         </>
     );

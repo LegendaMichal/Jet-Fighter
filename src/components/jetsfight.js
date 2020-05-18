@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Fighter from './fighter'
 import JetsData from './jetsdata'
+import BasicCloud from './cloud';
 
 const KEY = {
   DOWN: 40,
@@ -32,6 +33,7 @@ export default class JetsFightGame extends Component {
 
     this.socket = args.socket;
     this.sessionId = args.sessionId;
+    this.clouds = [];
   }
 
   handleKeys(value, e){
@@ -95,6 +97,16 @@ export default class JetsFightGame extends Component {
     window.addEventListener('keyup',   this.handleKeys.bind(this, false));
     window.addEventListener('keydown', this.handleKeys.bind(this, true));
 
+    while (this.clouds.length < 6) {
+      this.clouds.push(new BasicCloud({
+          screenSize: this.state.screen,
+          size: {
+              width: 300,
+              height: 200
+          }
+      }));
+    }
+
     const context = this.canvas.current.getContext('2d');
     this.setState({ context: context });
     requestAnimationFrame(() => {this.update()});
@@ -119,6 +131,9 @@ export default class JetsFightGame extends Component {
     context.globalAlpha = 1;
 
     // Render
+    this.clouds.forEach(cloud => {
+      cloud.render(context);
+    });
     if (this.player !== null) {
       this.player.render(this.state);
       this.socket.emit('player_data', this.player.data());

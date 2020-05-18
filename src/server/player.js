@@ -8,7 +8,7 @@ class Player {
     }
 
     damaged() {
-        this.hp -= 10;
+        this.hp -= Math.random * 8 + 2;
         return this.hp;
     }
 

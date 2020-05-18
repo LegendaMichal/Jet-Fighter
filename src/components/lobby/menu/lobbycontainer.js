@@ -12,7 +12,7 @@ function LobbyContainer(props) {
                 </div>
             </div>
             <h1>Custom Games</h1>
-            <div className='row'>
+            <div className='row context-row'>
                 <div className='col'>
                     <LobbyTable joinLobby={props.joinLobby} lobbyList={props.lobbyList}/>
                 </div>
