@@ -10,7 +10,7 @@ function LobbyIndex(props) {
             <td>{lobbyName}</td>
             <td>{connectedPlayers}/{maxPlayers}</td>
             <td>
-                <button className="btn btn-primary" type="button" onClick={props.onClick} disabled={disabled}>Join</button>
+                <button className="join-btn" type="button" onClick={props.onClick} disabled={disabled}>Join</button>
             </td>
         </tr>
     );

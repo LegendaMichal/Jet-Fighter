@@ -1,3 +1,24 @@
+#homeBtn {
+    display: block;
+    position: relative;
+    color: #1a4464;
+    width: 100px;
+    background: none;
+    border: 0;
+    text-align: center;
+    white-space: nowrap;
+    text-transform: capitalize;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+    padding: 0;
+
+    &:hover {
+        color: #4b89b8;
+    }
+}
+
 .menu-btns {
     margin-top: 150px;
 
@@ -135,4 +156,159 @@
             color: white;
         }
     }
+}
+
+.profile-btns {
+    padding: 30px 50px 60px 50px;
+    background-color: white;
+    border-bottom-left-radius: 2.3em;
+    border-bottom-right-radius: 2.3em;
+    width: 750px;
+
+    > .row {
+        margin: 30px 15px 30px 15px;
+    }
+
+    #profileBtn {
+        display: block;
+        position: relative;
+        color: #1a4464;
+        background: none;
+        border: 0;
+        text-align: center;
+        white-space: nowrap;
+        text-transform: capitalize;
+        margin: 0;
+        padding: 0;
+        width: inherit;
+
+        &:hover {
+            color: #4b89b8;
+        }
+    }
+
+    #pName {
+        display: inline-block;
+        position: relative;
+        background: none;
+        border: none;
+        font-size: xx-large;
+        width: inherit;
+        border: 3px solid white;
+
+        &:hover:enabled {
+            border: 3px solid #4b89b8;
+        }
+    }
+
+    .profile-options button {
+        display: block;
+        position: relative;
+        color: #1a4464;
+        background: none;
+        border: 0;
+        text-align: center;
+        white-space: nowrap;
+        text-transform: capitalize;
+        margin: 0;
+        padding: 0;
+        width: inherit;
+
+        &:hover {
+            color: #4b89b8;
+        }
+    }
+
+    input {
+        border: 2px solid #1a4464;
+
+        &:focus, &:hover {
+            border: 2px solid #4b89b8;
+        }
+    }
+
+    .submit-row {
+        margin: 35px 0 30px 0;
+    }
+}
+
+.login {
+    padding: 30px 50px 60px 50px;
+    background-color: white;
+    border-bottom-left-radius: 2.3em;
+    border-bottom-right-radius: 2.3em;
+    width: 750px;
+    color: #1a4464;
+
+    > .row {
+        display: block;
+        position: relative;
+        margin: 30px 110px 40px 110px;
+        padding: 0;
+    }
+
+    input {
+        border: 2px solid #1a4464;
+
+        &:focus, &:hover {
+            border: 2px solid #4b89b8;
+        }
+    }
+
+    .submit-row {
+        margin: 35px 0 30px 0;
+    }
+
+    button {
+        display: block;
+        position: relative;
+        color: #1a4464;
+        background: none;
+        border: 0;
+        text-align: center;
+        white-space: nowrap;
+        text-transform: capitalize;
+        margin: 0;
+        border-radius: 0.4em;
+        border: 1px solid #1a4464;
+        width: 90px;
+
+        &:hover {
+            background: #4b89b8;
+            border-color: #4b89b8;
+            color: white;
+        }
+    }
+
+    #submitBtn {
+        padding: 3px 15px;
+    }
+
+    #change {
+        padding: 3px 15px;
+    }
+
+    #skip {
+        padding: 3px 15px;
+        width: unset;
+    }
+
+    .register-btns {
+        padding-left: 15px;
+    }
+}
+
+.lobbyContainer {
+    padding: 30px 50px 60px 50px;
+    background-color: white;
+    border-bottom-left-radius: 2.3em;
+    border-bottom-right-radius: 2.3em;
+    width: 750px;
+    color: #1a4464;
+}
+
+.jetsdata {
+    position: absolute;
+    width: 100%;
+    margin: 60px;
 }

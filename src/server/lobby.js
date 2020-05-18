@@ -12,8 +12,10 @@ class Lobby {
     getData() {
         return {
             id: this.id,
+            pId: this.pId,
             name: this.name,
             maxPlayers: this.maxPlayers,
+            players: this.players,
             playersCount: this.players.length
         };
     }
@@ -21,6 +23,7 @@ class Lobby {
     getDetails() {
         return {
             id: this.id,
+            pIds: this.pIds,
             name: this.name,
             maxPlayers: this.maxPlayers,
             playersCount: this.players.length,
@@ -29,9 +32,27 @@ class Lobby {
     }
 
     addPlayer(playerObj) {
-        if (this.players.filter(player => player.id === playerObj.id).length === 0) {
+        if (!this.players.some(player => player.id === playerObj.id)) {
             this.players.push(new Player(playerObj));
+            return true;
         }
+        return false;
+    }
+
+    playerDamaged(id) {
+        let player = this.players.find(player => {
+            return player.id === id;
+        });
+        player.damaged();
+        return player;
+    }
+
+    healthData() {
+        return this.players.map(player => {
+            return {
+                id: player.id, name: player.name, hp: player.hp
+            }
+        });
     }
 
     removePlayer(playerId) {

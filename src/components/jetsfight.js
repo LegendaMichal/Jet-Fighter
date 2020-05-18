@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Fighter from './fighter'
+import JetsData from './jetsdata'
 
 const KEY = {
   DOWN: 40,
@@ -21,9 +22,11 @@ export default class JetsFightGame extends Component {
         up    : 0,
         down  : 0,
         space : 0,
-      }
+      },
+      jetsData: []
     }
     this.canvas = React.createRef();
+    this.pName = args.pName;
     this.player = null;
     this.others = [];
 
@@ -48,7 +51,9 @@ export default class JetsFightGame extends Component {
         jet.setPosition(data.position);
         jet.setAngle(data.angle);
         jet.updateProjectiles(data.projs);
+        jet.health = data.hp;
         found = true;
+        jet.destroyed = data.destroyed;
       }
     });
     if (!found) {
@@ -63,12 +68,20 @@ export default class JetsFightGame extends Component {
         x: this.state.screen.width/2,
         y: this.state.screen.height/2
       },
-      canControl: false
+      canControl: false,
+      pName: data.pName,
+      health: data.health
     }));
   }
 
   deleteOther(data) {
     this.others = this.others.filter(jet => jet.getID() !== data.id);
+  }
+
+  updateHealth(data) {
+    this.setState({
+      jetsData: data
+    })
   }
 
   componentDidMount() {
@@ -77,6 +90,7 @@ export default class JetsFightGame extends Component {
     this.socket.on('other_update', data => this.otherUpdate(data));
     this.socket.on('player_join', data => this.joinOther(data));
     this.socket.on('player_left', data => this.deleteOther(data));
+    this.socket.on('update_health', data => this.updateHealth(data));
 
     window.addEventListener('keyup',   this.handleKeys.bind(this, false));
     window.addEventListener('keydown', this.handleKeys.bind(this, true));
@@ -111,6 +125,12 @@ export default class JetsFightGame extends Component {
     }
     Object.entries(this.others).forEach(([key, value]) => {
       value.render(this.state);
+      this.player.projectiles.forEach(proj => {
+        if (value.isInCollision(proj)) {
+          proj.hitObject();
+          this.socket.emit('enemy_hit', { id: value.id });
+        }
+      });
     });
 
     context.restore();
@@ -127,26 +147,30 @@ export default class JetsFightGame extends Component {
     this.player = new Fighter({
       id: id,
       position: {
-        x: this.state.screen.width/2,
-        y: this.state.screen.height/2
+        x: Math.random() * (this.state.screen.width - this.state.screen.width/4) + this.state.screen.width/8,
+        y: Math.random() * (this.state.screen.height - this.state.screen.height/4) + this.state.screen.height/8,
       },
-      canControl: true
+      canControl: true,
+      name: this.pName,
+      health: 100
     });
   }
 
   render() {
     return (
-      
-      <div className='container-fluid'>
-        <div className='row justify-content-center'>
-          <div className='col-8 offset-lg-0'>
-            <canvas ref={this.canvas}
-              width={this.state.screen.width * this.state.screen.ratio}
-              height={this.state.screen.height * this.state.screen.ratio}
-            />
+      <>
+        <JetsData jetsData={this.state.jetsData}/>
+        <div className='container-fluid'>
+          <div className='row justify-content-center'>
+            <div className='col-8 offset-lg-0'>
+              <canvas ref={this.canvas}
+                width={this.state.screen.width * this.state.screen.ratio}
+                height={this.state.screen.height * this.state.screen.ratio}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 }

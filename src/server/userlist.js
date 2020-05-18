@@ -5,18 +5,15 @@ class UserList {
         this.users = [];
     }
 
-    addUser(userId) {
-        if (this.users.includes(userId))
+    addUser(newUser) {
+        if (this.users.some(user => user.id === newUser.id))
             return;
-        console.log("Add user:",userId);
-        this.users.push(new User({
-            id: userId
-        }));
+        console.log("Add user:", newUser);
+        this.users.push(newUser);
     }
 
     removeUser(userId) {
-        if (this.users.includes(userId))
-            this.users.splice(this.users.indexOf(userId), 1);
+        this.users = this.users.filter(user => user.id !== userId);
     }
 }
 

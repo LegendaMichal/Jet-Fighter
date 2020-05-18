@@ -8,21 +8,16 @@ class LobbyMenu extends React.Component {
         super(args);
         this.state = {
             lobbyPosition: 'container', // create, inside
-            playerName: (args && args.playerName ? args.playerName : "player 1"),
             lobbies: [],
             lobbyData: {}
         };
         this.socket = args.socket;
-    }
-
-    setName = (name) => {
-        this.setState({
-            playerName: name
-        });
+        this.playerData = args.playerData;
+        this.backToMenu = args.back;
     }
 
     joiningLobby = (id) => {
-        this.socket.emit('try_join_lobby', { lobbyId: id, playerName: this.state.playerName });
+        this.socket.emit('try_join_lobby', { lobbyId: id, playerName: this.playerData.playerName });
     }
 
     createLobby = () => {
@@ -34,8 +29,7 @@ class LobbyMenu extends React.Component {
     newLobby = (formData) => {
         this.socket.emit('new_lobby', {
             name: formData.get('lobbyName'),
-            maxPlayers: formData.get('maxPlayers'),
-            playerName: this.state.playerName.slice(0)
+            maxPlayers: formData.get('maxPlayers')
         });
     }
 
@@ -57,6 +51,7 @@ class LobbyMenu extends React.Component {
                 lobbyPosition: 'inside', // create, container
                 lobbyData: data
             });
+            console.log(data);
         });
         this.socket.on('leave_lobby', () => {
             this.setState({
@@ -64,9 +59,16 @@ class LobbyMenu extends React.Component {
             });
         });
         this.socket.on('update_lobbies', data => {
-            this.setState({
-                lobbies: data
+            const lobby = data.find(lobby => {
+                return lobby.players.some(player => player.id === this.playerData.pId);
             });
+            if (lobby === undefined) {
+                this.setState({
+                    lobbies: data
+                });
+            } else {
+                this.socket.emit('try_join_lobby', { lobbyId: lobby.id, playerName: this.playerData.playerName });
+            }
         });
         this.socket.on('update_lobby', data => {
             this.setState({
@@ -81,12 +83,13 @@ class LobbyMenu extends React.Component {
 
     render() {
         return (   
-            <div className='container-fluid'>
+            <div className='container-fluid lobbyContainer'>
                 <div className='row justify-content-center'>
-                    <div className='col-lg-6 offset-lg-0'>
+                    <div className='col'>
                         { this.state.lobbyPosition === 'container'
                         ? <LobbyContainer
-                                playerName={this.state.playerName.slice(0)}
+                                back={this.backToMenu}
+                                playerName={this.playerData.playerName.slice(0)}
                                 createGame={this.createLobby} 
                                 setName={this.setName} 
                                 joinLobby={this.joiningLobby}
@@ -100,7 +103,7 @@ class LobbyMenu extends React.Component {
                                 onStart={this.startGame}
                                 />
                             : <LobbyCreator 
-                                playerName={this.state.playerName.slice(0)} 
+                                playerName={this.playerData.playerName.slice(0)} 
                                 onCreate={this.newLobby} 
                                 />
                         }

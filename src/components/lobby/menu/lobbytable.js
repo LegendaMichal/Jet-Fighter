@@ -3,9 +3,7 @@ import LobbyIndex from './lobbyindex'
 
 function LobbyTable(props) {
     return (
-        <div className="table-responsive border rounded border-primary shadow-lg" style={{
-            minHeight: 320
-        }}>
+        <div className="table-responsive border rounded border-primary shadow-lg">
             <table className="table table-striped table-sm">
                 <thead>
                     <tr className="text-capitalize">

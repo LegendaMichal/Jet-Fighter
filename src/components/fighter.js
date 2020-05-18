@@ -1,10 +1,16 @@
 import AEG from './../Images/Planes/AEG/AEG_CIV_default.png'
+import AEGdmged from './../Images/Planes/AEG/AEG_CIV_default_damaged.png'
+import enemyAEG from './../Images/Planes/AEG/AEG_CIV_enemy.png'
+import enemyAEGdmged from './../Images/Planes/AEG/AEG_CIV_enemy_damaged.png'
+import AEGDestroyed from './../Images/Planes/AEG/AEG_CIV_death.png'
 import Projectile from './projectile'
-import { degToRad } from './../helper.js'
+import { degToRad, distancePointFromLine } from './../helper.js'
 
 class Fighter {
     constructor(args) {
       this.id = args.id;
+      this.name = args.name;
+      this.health = args.hp;
       this.canControl = args.canControl;
       this.position = args.position;
       this.velocity = {
@@ -15,7 +21,10 @@ class Fighter {
       this.rotationSpeed = 1.5;
       this.speed = 3;
       this.image = new Image();
-      this.image.src = AEG;
+      if (this.canControl)
+        this.image.src = AEG;
+      else
+        this.image.src = enemyAEG;
       this.size = {
         width: 64,
         height: 64
@@ -31,6 +40,7 @@ class Fighter {
       this.fireTimePeriod = 80; // in ms
       this.projectilesFired = 0;
       this.projectiles = [];
+      this.destroyed = false;
     }
 
     getID() {
@@ -55,6 +65,10 @@ class Fighter {
       this.position.y += before.y - after.y;
     }
 
+    setHealth(hp) {
+
+    }
+
     setPosition(pos) {
       this.position = pos;
     }
@@ -63,12 +77,13 @@ class Fighter {
       this.projectiles = [];
       if (projs.length > 0) {
         projs.forEach(proj => {
-          this.projectiles.push(new Projectile({
+          const pjct = new Projectile({
             isOwner: false,
             position: proj.position,
             angle: proj.angle,
             maxShootLength: 400
-          }));
+          });
+          this.projectiles.push(pjct);
         });
       }
     }
@@ -98,6 +113,42 @@ class Fighter {
         angle: this.rotation,
         maxShootLength: 400
       }));
+    }
+
+    isInCollision(projectile) {
+      const p1 = { x: projectile.position.x, y: projectile.position.y };
+      const p2 = { x: p1.x + Math.cos(projectile.angle) * projectile.defaultSize.width, y: p1.y + Math.sin(projectile.angle) * projectile.defaultSize.width };
+      if (this.containsPoint(p1) || this.containsPoint(p2)) {
+        return true;
+      }
+      return false;
+    }
+
+    containsPoint(point) {
+      // https://math.stackexchange.com/questions/190111/how-to-check-if-a-point-is-inside-a-rectangle second one
+      const rect = this.getBoundaryPoints();
+      const distABP = distancePointFromLine(point, { x1: rect.A.x, y1: rect.A.y, x2: rect.B.x, y2: rect.B.y });
+      const distDCP = distancePointFromLine(point, { x1: rect.C.x, y1: rect.C.y, x2: rect.D.x, y2: rect.D.y });
+      const distABDC = distancePointFromLine(rect.A, { x1: rect.C.x, y1: rect.C.y, x2: rect.D.x, y2: rect.D.y });
+      if (distABP <= distABDC && distDCP <= distABDC) {
+        const distACP = distancePointFromLine(point, { x1: rect.A.x, y1: rect.A.y, x2: rect.C.x, y2: rect.C.y });
+        const distBDP = distancePointFromLine(point, { x1: rect.B.x, y1: rect.B.y, x2: rect.D.x, y2: rect.D.y });
+        const distACBD = distancePointFromLine(rect.A, { x1: rect.B.x, y1: rect.B.y, x2: rect.D.x, y2: rect.D.y });
+        if (distACP <= distACBD && distBDP <= distACBD) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    getBoundaryPoints() {
+      const A = { x: this.position.x + Math.cos(degToRad(this.rotation + 90)) * (this.size.height / 4), y: this.position.y + Math.sin(degToRad(this.rotation + 90)) * this.size.height / 4 };
+      const B = { x: A.x + Math.cos(degToRad(this.rotation)) * this.size.width, y: A.y + Math.sin(degToRad(this.rotation)) * this.size.width };
+      const C = { x: B.x + Math.cos(degToRad(this.rotation + 90)) * (this.size.height / 3), y: B.y + Math.sin(degToRad(this.rotation + 90)) * (this.size.height / 3) };
+      const D = { x: A.x + Math.cos(degToRad(this.rotation + 90)) * (this.size.height / 3), y: A.y + Math.sin(degToRad(this.rotation + 90)) * (this.size.height / 3) };
+      return {
+        A: A, B: B, C: C, D: D
+      }
     }
 
     render(state) {
@@ -136,20 +187,24 @@ class Fighter {
         this.projectiles = this.projectiles.filter(proj => !proj.isExpired());
       }
 
-      // Draw
-      const context = state.context;
-      context.save();
-      context.translate(this.position.x, this.position.y);
-      context.rotate(this.rotation * Math.PI / 180);
-      context.drawImage(this.image, 0,0, this.size.width, this.size.height);
-      context.restore();
-
+      if (!this.destroyed) {
+        // Draw
+        const context = state.context;
+        context.save();
+        context.translate(this.position.x, this.position.y);
+        context.rotate(this.rotation * Math.PI / 180);
+        context.drawImage(this.image, 0,0, this.size.width, this.size.height);
+        context.restore();
+      }
+      
       this.projectiles.forEach(proj => proj.render(state));
     }
 
     data() {
       return {
         id: this.id,
+        name: this.name,
+        health: this.health,
         position: this.position,
         angle: this.rotation,
         projs: this.projectiles.map(proj => proj.shortData())

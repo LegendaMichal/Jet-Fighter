@@ -17,18 +17,22 @@ function LobbyCreator(props) {
                 </div>
             </div>
             <form className="form-group" onSubmit={onCreate}>
-                <div className="row" style={{ marginTop: 15, marginBottom: 15, marginLeft: -15, marginRight: -15 }}>
+                <div className="row">
                     <div className="col">
-                        <div className="row" style={{ marginTop: 15, marginBottom: 15, marginLeft: -15, marginRight: -15 }}>
-                            <div className="col">
-                                <span style={{ margin: 15 }}>Lobby Name:</span>
-                                <input name="lobbyName" type="text" placeholder="e.g. Martin's game" defaultValue={lobbyName}/>
+                        <div className="row">
+                            <div className="col-3">
+                                <label htmlFor='lobbyName'>Lobby Name:</label>
+                            </div>
+                            <div className='col'>
+                                <input name="lobbyName" id='lobbyName' type="text" placeholder="e.g. Martin's game" defaultValue={lobbyName}/>
                             </div>
                         </div>
-                        <div className="row" style={{ marginTop: 15, marginBottom: 15, marginLeft: -15, marginRight: -15 }}>
-                            <div className="col-lg-12">
-                                <span style={{ margin: 15 }}>Max players:</span>
-                                <input name='maxPlayers' type="number" min="2" max="5" step="1" defaultValue={2}/>
+                        <div className="row">
+                            <div className="col-3">
+                                <label htmlFor='maxPlayers'>Max players:</label>
+                            </div>
+                            <div className='col'>
+                                <input name='maxPlayers' id='maxPlayers' type="number" min="2" max="5" step="1" defaultValue={2}/>
                             </div>
                         </div>
                     </div>

@@ -43,6 +43,10 @@ class LobbyList {
         lobby.removePlayer(playerId);
         return lobby;
     }
+
+    removeLobby(lobbyId) {
+        this.lobbyArray = this.lobbyArray.filter(l => l.id !== lobbyId);
+    }
 }
 
 module.exports = LobbyList;

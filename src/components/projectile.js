@@ -21,10 +21,15 @@ class Projectile {
         this.trajectoryLength = 0;
         this.image = new Image();
         this.image.src = img;
+        this.hit = false;
+    }
+
+    hitObject() {
+        this.hit = true;
     }
 
     isExpired() {
-        return this.trajectoryLength > this.lifeSpanLength;
+        return this.trajectoryLength > this.lifeSpanLength || this.hit;
     }
 
     render(state) {
