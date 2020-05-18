@@ -7,7 +7,7 @@ import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faHome, faLock, faChartBar } from '@fortawesome/free-solid-svg-icons';
 
 function PlayerProfile(props) {
-    const [ profileState, setProfileState ] = useState('security');
+    const [ profileState, setProfileState ] = useState('stats');
     const showStats = () => {
         setProfileState('stats');
     }
@@ -36,13 +36,13 @@ function PlayerProfile(props) {
                 </div>
                 <div className='row profile-options'>
                     <div className="col-4">
-                        <button className="" id='stats' type="button" onClick={showStats}><FontAwesomeIcon icon={faUser} size="1x"/></button>
+                        <button className="" id='stats' type="button" onClick={showStats}><span>Stats</span><FontAwesomeIcon icon={faUser} size="1x"/></button>
                     </div>
                     <div className="col-4">
-                        <button className="" id='match-history' type="button" onClick={showMatchHistory}><FontAwesomeIcon icon={faChartBar} size="1x"/></button>
+                        <button className="" id='match-history' type="button" onClick={showMatchHistory}><span>Match history</span><FontAwesomeIcon icon={faChartBar} size="1x"/></button>
                     </div>
                     <div className="col-4">
-                        <button className="" id='security' type="button" onClick={showSecurity}><FontAwesomeIcon icon={faLock} size="1x"/></button>
+                        <button className="" id='security' type="button" onClick={showSecurity}><span>Change password</span><FontAwesomeIcon icon={faLock} size="1x"/></button>
                     </div>
                 </div>
                 <div className='row profile-register'>

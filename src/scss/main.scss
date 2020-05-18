@@ -214,6 +214,10 @@
         padding: 0;
         width: inherit;
 
+        span {
+            padding-right: 0.5em;
+        }
+
         &:hover {
             color: #4b89b8;
         }
