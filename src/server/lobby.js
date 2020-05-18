@@ -5,7 +5,6 @@ class Lobby {
         this.id = args.id;
         this.name = args.name; 
         this.maxPlayers = args.maxPlayers;
-        this.close = args.aboutToClose;
         this.players = [];
     }
 

@@ -174,17 +174,17 @@ export default class JetsFightGame extends Component {
   render() {
     return (
       <>
-        <JetsData jetsData={this.state.jetsData}/>
         <div className='container-fluid'>
           <div className='row justify-content-center'>
-            <div className='col-8 offset-lg-0'>
-              <canvas ref={this.canvas}
+            <div className='col'>
+              <canvas ref={this.canvas} className='game-canvas'
                 width={this.state.screen.width * this.state.screen.ratio}
                 height={this.state.screen.height * this.state.screen.ratio}
               />
             </div>
           </div>
         </div>
+        <JetsData jetsData={this.state.jetsData}/>
       </>
     );
   }

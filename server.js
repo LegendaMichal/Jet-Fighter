@@ -227,7 +227,9 @@ io.on('connection', socket => {
         }
         const lobby = games.getLobbyByPlayer(user.id);
         if (lobby) {
-            socket.broadcast.to(lobby.id).emit('player_left', { id: user.id });
+            const lId = lobby.id;
+            socket.broadcast.to(lId).emit('player_left', { id: user.id });
+            lobby.removePlayer(user.id);
         } else {
 
         }
