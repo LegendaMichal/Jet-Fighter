@@ -47,7 +47,7 @@ function MainWindowManager (props) {
             ...playerData,
             "playerName": name
         });
-        props.socket.emit('name_change', name);
+        props.socket.emit('name_change', { id: playerData.pId, name: name });
     };
     props.socket.on('PlayerRegistered', playerInfo => {
 
