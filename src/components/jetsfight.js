@@ -140,12 +140,14 @@ export default class JetsFightGame extends Component {
     }
     Object.entries(this.others).forEach(([key, value]) => {
       value.render(this.state);
-      this.player.projectiles.forEach(proj => {
-        if (value.isInCollision(proj)) {
-          proj.hitObject();
-          this.socket.emit('enemy_hit', { id: value.id });
-        }
-      });
+      if (this.player.projectiles !== null) {
+        this.player.projectiles.forEach(proj => {
+          if (value.isInCollision(proj)) {
+            proj.hitObject();
+            this.socket.emit('enemy_hit', { id: value.id });
+          }
+        });
+      }
     });
 
     context.restore();
