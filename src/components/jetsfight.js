@@ -115,13 +115,19 @@ export default class JetsFightGame extends Component {
   componentWillUnmount() {
     window.removeEventListener('keyup', this.handleKeys);
     window.removeEventListener('keydown', this.handleKeys);
+
+    this.pName = args.pName;
+    this.player = null;
+    this.others = [];
+
+    this.sessionId = undefined;
+    this.clouds = [];
   }
 
   update(time) {
     const context = this.state.context;
 
     context.save();
-    context.scale(this.state.screen.ratio, this.state.screen.ratio);
     context.clearRect(0, 0, this.state.screen.width, this.state.screen.height);
 
     // Motion trail
@@ -140,7 +146,7 @@ export default class JetsFightGame extends Component {
     }
     Object.entries(this.others).forEach(([key, value]) => {
       value.render(this.state);
-      if (this.player.projectiles !== null) {
+      if (this.player && this.player.projectiles) {
         this.player.projectiles.forEach(proj => {
           if (value.isInCollision(proj)) {
             proj.hitObject();
