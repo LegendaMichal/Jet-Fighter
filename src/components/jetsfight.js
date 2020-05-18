@@ -115,8 +115,7 @@ export default class JetsFightGame extends Component {
   componentWillUnmount() {
     window.removeEventListener('keyup', this.handleKeys);
     window.removeEventListener('keydown', this.handleKeys);
-
-    this.pName = args.pName;
+    
     this.player = null;
     this.others = [];
 
