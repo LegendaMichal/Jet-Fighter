@@ -157,6 +157,22 @@ io.on('connection', socket => {
             socket.broadcast.to(game.getId()).emit('update_health', game.healthData());
         }
     });
+    socket.on('delete_player_from_game', () => {
+        const user = userList.users.find(user => user.socketIds.some(socId => socId === socket.id));
+        if (user === undefined) {
+            console.log("unable to find user");
+            return;
+        }
+        const game = games.getLobbyByPlayer(user.id);
+        if (game === undefined) {
+            console.log("unable to find game");
+            return;
+        }
+        games.removePlayerFrom(game.id, user.id);
+        if (game.players.length <= 0) {
+            games.removeLobby(game.id);
+        }
+    })
     socket.on('reconnect_attempt', attempt => {
         console.log("try to reconnected");
         const user = userList.users.find(user => user.socketIds.some(socId => socId === socket.id));

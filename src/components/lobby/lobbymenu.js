@@ -51,7 +51,6 @@ class LobbyMenu extends React.Component {
                 lobbyPosition: 'inside', // create, container
                 lobbyData: data
             });
-            console.log(data);
         });
         this.socket.on('leave_lobby', () => {
             this.setState({

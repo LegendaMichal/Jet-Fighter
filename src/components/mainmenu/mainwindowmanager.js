@@ -87,10 +87,12 @@ function MainWindowManager (props) {
     props.socket.on('lost', position => {
         setMenuState('result');
         setResultPos(position);
+        props.socket.emit('delete_player_from_game', true);
     })
     props.socket.on('winner', () => {
         setMenuState('result');
         setResultPos(1);
+        props.socket.emit('delete_player_from_game', true);
     })
     return (
         <div>
